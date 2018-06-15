@@ -5,7 +5,7 @@ digonal = {
 	one: ['00', '11', '22'],
 	two: ['02', '11', '20']
 };
-var isComputer = false;
+var isComputer = true;
 
 var sketchBoard = document.createElement('div');
 sketchBoard.id = 'sketchBoard';
@@ -20,12 +20,13 @@ var checkDigonal = function(){
 		if(board[digonal.one[i].charAt(0)][digonal.one[i].charAt(1)]['player'] == 'O'){ o1++; }
 		if(board[digonal.two[i].charAt(0)][digonal.two[i].charAt(1)]['player'] == 'O'){ o2++; }
 
-		if(x1 == 3 || x2 == 3) anounceWinner('X');
-		if(o1 == 3 || o2 == 3) anounceWinner('O');
+		if(x1 == 3 || x2 == 3) anounceResult('X');
+		if(o1 == 3 || o2 == 3) anounceResult('O');
 	}
 };
 
 var eventListener = function(e) {
+	var result = false;
 	if (e.target.innerText.length) return;
 	if (parseInt(count) % 2 === 0) {
 		this.innerText = 'X';
@@ -33,7 +34,8 @@ var eventListener = function(e) {
 		board[parseInt(this.id[0])][board.length - 1]['x']++;
 		board[board.length - 1][parseInt(this.id[1])]['x']++;
 		if (board[parseInt(this.id[0])][board.length - 1]['x'] == 3 || board[board.length - 1][parseInt(this.id[1])]['x'] == 3){
-			anounceWinner('X');
+			result = true;
+			anounceResult('X');
 		}
 		if (isComputer) computer();
 	} else {
@@ -42,15 +44,15 @@ var eventListener = function(e) {
 		board[parseInt(this.id[0])][board.length - 1]['o']++;
 		board[board.length - 1][parseInt(this.id[1])]['o']++;
 		if (board[parseInt(this.id[0])][board.length - 1]['o'] == 3 || board[board.length - 1][parseInt(this.id[1])]['o'] == 3) {
-			anounceWinner('O');
+			result = true;
+			anounceResult('O');
 		}
 	}
 	checkDigonal();
 	count++;
-	if(count == 9){
-		setTimeout(function () { alert('Draw !!!'); resetBoard(); }, 100);
+	if (count == 9 && !result){
+		anounceResult('O', true);
 	}
-	console.log(board);
 }
 
 var drawBoard = function(){
@@ -67,8 +69,15 @@ var drawBoard = function(){
 	}
 }();
 
-var anounceWinner = function(w){
-	setTimeout(function () { alert(w + ' win !!!'); resetBoard(); }, 100);
+var anounceResult = function(w, draw){
+	setTimeout(function () {
+		if(!draw){
+			alert(w + ' win !!!');
+		}else{
+			alert('Draw !!!');
+		}
+		resetBoard();
+	}, 100);
 };
 
 var resetBoard = function(){
@@ -93,20 +102,20 @@ var computer = function(){
 	var oCountx = 0;
 	var oCounty = 0;
 	for(var i = 0, l = board.length-1; i < l; i++){
-		xlistx.push(board[i][l].x);
-		olistx.push(board[i][l].o);
-		xlisty.push(board[l][i].x);
-		olisty.push(board[l][i].o);
-		// for (var j = 0; j < l; j++){
-		// 	console.log(i, j, board[i][j]['player']);
-		// 	if(!board[i][j]['player']){
-		// 		board[i][j]['player'] = 'O';
-		// 		board[i][j]['box'].innerText = 'O';
-		// 		board[i][l]['o']++;
-		// 		board[l][j]['o']++;
-		// 		return;
-		// 	}
-		// }
+		if(board[i][l].x + board[i][l].o < 3){
+			xlistx.push(board[i][l].x);
+			olistx.push(board[i][l].o);
+		} else {
+			xlistx.push(0);
+			olistx.push(0);
+		}
+		if (board[l][i].x + board[l][i].o < 3){
+			xlisty.push(board[l][i].x);
+			olisty.push(board[l][i].o);
+		}else{
+			xlisty.push(0);
+			olisty.push(0);
+		}
 	}
 
 	var xMax = Math.max(...xlistx),
@@ -121,36 +130,37 @@ var computer = function(){
 	console.log('xMax ---> ', xMax, xMaxIndex);
 	console.log('yMax ---> ', yMax, yMaxIndex);
 
-	// if (!board[i][j]['player']) {
-	// 	board[i][j]['player'] = 'O';
-	// 	board[i][j]['box'].innerText = 'O';
-	// 	board[i][l]['o']++;
-	// 	board[l][j]['o']++;
-	// 	return;
-	// }
 	var finalIndex = null;
 
-	for(var i = 0, l = 3; i < l; i++){
-		console.log('xMax ---> ', finalIndex);
-		// console.log('finalIndex ---> ', board[finalIndex][i]);
-		if (xMax > yMax){
+	for (var i = 0, l = board.length-1; i < l; i++){
+		if (xMax >= yMax) {
 			finalIndex = xMaxIndex;
 			if (!board[finalIndex][i]['player']) {
 				board[finalIndex][i]['player'] = 'O';
 				board[finalIndex][i]['box'].innerText = 'O';
 				board[finalIndex][l]['o']++;
 				board[l][i]['o']++;
+				if (board[parseInt(finalIndex)][i]['o'] == 3 || board[i][parseInt(finalIndex)]['o'] == 3) {
+					result = true;
+					anounceResult('O');
+				}
 				break;
 			}
-		} else{
+		} else {
 			finalIndex = yMaxIndex;
 			if (!board[i][finalIndex]['player']) {
 				board[i][finalIndex]['player'] = 'O';
 				board[i][finalIndex]['box'].innerText = 'O';
 				board[l][finalIndex]['o']++;
 				board[l][finalIndex]['o']++;
+				if (board[parseInt(i)][finalIndex]['o'] == 3 || board[finalIndex][parseInt(i)]['o'] == 3) {
+					result = true;
+					anounceResult('O');
+				}
 				break;
 			}
-		};
+		}
+
+
 	}
 };
