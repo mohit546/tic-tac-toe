@@ -4,8 +4,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Tic Tac Toe</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
 </head>
 <body>
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Tic Tac Toe</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:void(0)">Welcome</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+
+                <button type="button" class="btn btn-large btn-block btn-danger" onclick="changeMode(true)">Computer</button>
+
+            </div>
+            <div class="col-sm-4">
+
+                <button type="button" class="btn btn-large btn-block btn-success" onclick="changeMode(false)">Player</button>
+
+            </div>
+            <div class="col-sm-4">
+
+                <button type="button" class="btn btn-large btn-block btn-warning" onclick="resetBoard()">Reset Board</button>
+
+            </div>
+            <div class="col-sm-12">
+                <h3 style="text-align: center; margin-top: 70px;">
+                    <span style="font-weight: bolder;">Mode:</span> <span id="playMode">Player Mode</span>
+                </h3>
+            </div>
+        </div>
+    </div>
 
     <script src="./tic-tac-toe.js"></script>
 </body>

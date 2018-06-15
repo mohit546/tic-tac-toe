@@ -5,7 +5,13 @@ digonal = {
 	one: ['00', '11', '22'],
 	two: ['02', '11', '20']
 };
-var isComputer = true;
+var isComputer = false;
+var playMode = document.getElementById('playMode');
+var changeMode = function(computerMode) {
+	isComputer = computerMode;
+	if (isComputer) playMode.innerText = 'Computer Mode';
+	else playMode.innerText = 'Player Mode';
+}
 
 var sketchBoard = document.createElement('div');
 sketchBoard.id = 'sketchBoard';
